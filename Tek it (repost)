@@ -1,0 +1,50 @@
+import time
+from threading import Thread, Lock
+import sys
+
+lock = Lock()
+
+def animate_text(text, delay=0.1):
+    with lock:
+        for char in text:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(delay)
+        print()
+
+def sing_lyric(lyric, delay, speed):
+     time.sleep(delay)
+     animate_text(lyric, speed)
+
+def sing_song():
+    lyrics = [
+        ("We started off in such a nice place", 0.08),
+        ("We were talking the same language", 0.1),
+        ("I open and I'm closing", 0.15),
+        ("You can't stand the thought", 0.1),
+        ("Of a real beating heart You'd be holding", 0.1),
+        ("having trouble Owning", 0.09),
+        ("and admit that I am hoping", 0.17),
+     
+
+        ("I watch the moon, Let it run my mood", 0.25),
+        ("Can't stop thinking of you", 0.20),
+        ("I watch you...", 0.51),
+        ("So long nice to know you I'll be moving on", 0.12),
+       
+    ]
+    delays  = [0.3, 2.0, 3.0, 4.0, 5.3, 6.0, 7.0, 8.2, 9.3, 10.5, 11.7]
+
+
+    threads = []
+    for i in range(len(lyrics)):
+        lyric, speed = lyrics[i]
+        t = Thread(target=sing_lyric, args=(lyric,delays[i], speed))
+        threads.append(t)
+        t.start()
+    
+    for thread in threads:
+        thread.join()
+
+if __name__ == "__main__":
+    sing_song()
